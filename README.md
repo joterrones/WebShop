@@ -1,0 +1,303 @@
+# Ecomerce2026 — Tienda deportiva
+
+Monorepo con una tienda online de artículos deportivos. Incluye un **frontend** en Angular y un **backend** en Node.js con PostgreSQL.
+
+```
+Ecomerce2026/
+├── angular-ecommerce-main/   # Frontend (SportShop)
+├── node-ecommerce/           # Backend API REST
+└── README.md                 # Este archivo
+```
+
+---
+
+## Descripción general
+
+| Proyecto | Carpeta | Tecnología | Puerto por defecto |
+|----------|---------|------------|-------------------|
+| **Frontend** | `angular-ecommerce-main` | Angular 19, Tailwind CSS | `4200` |
+| **Backend** | `node-ecommerce` | Express, Prisma, PostgreSQL | `3000` |
+
+El frontend consume la API del backend para listar productos, filtrar por categoría deportiva y registrar pedidos con datos del cliente (DNI/RUC, despacho, etc.).
+
+---
+
+## Conexión a la base de datos
+
+| Parte | ¿BD? | Detalle |
+|--------|------|---------|
+| **`node-ecommerce`** | Sí | PostgreSQL vía Prisma (`DATABASE_URL`) |
+| **`angular-ecommerce-main`** | No | Solo llama a la API (`http://localhost:3000/api`) |
+
+Credenciales actuales (en `.env` / `.env.example` del backend):
+
+| Campo | Valor |
+|-------|--------|
+| Servidor | `localhost` |
+| Base de datos | `ecommerce` |
+| Usuario | `postgres` |
+| Contraseña | `123` |
+| URL | `postgresql://postgres:123@localhost:5432/ecommerce` |
+
+Ahí se guardan categorías, productos, atributos EAV, imágenes y pedidos.
+
+Las **imágenes de productos** se publican como estáticos desde `node-ecommerce/public/images/`:
+
+- Carpeta: `public/images/products/`
+- URL: `http://localhost:3000/images/products/<archivo>`
+
+---
+
+## Requisitos previos (ambos proyectos)
+
+- [Node.js](https://nodejs.org/) 18 o superior
+- [npm](https://www.npmjs.com/) 9 o superior
+- [PostgreSQL](https://www.postgresql.org/) 14+ **o** [Docker](https://www.docker.com/) (para levantar la base de datos con un solo comando)
+
+Opcional para el frontend:
+
+- [Angular CLI](https://angular.dev/tools/cli) 19 (`npm install -g @angular/cli`)
+
+---
+
+## Cómo ejecutar todo el sistema
+
+Sigue estos pasos en orden la primera vez. Después solo necesitas levantar backend y frontend.
+
+### 1. Base de datos y backend
+
+```powershell
+cd node-ecommerce
+npm install
+copy .env.example .env
+```
+
+Edita `.env` si tus credenciales de PostgreSQL son distintas:
+
+```env
+DATABASE_URL=postgresql://postgres:123@localhost:5432/ecommerce
+PORT=3000
+CORS_ORIGIN=http://localhost:4200
+PUBLIC_BASE_URL=http://localhost:3000
+```
+
+**Opción A — PostgreSQL con Docker (recomendado):**
+
+```powershell
+docker compose up -d
+```
+
+**Opción B — PostgreSQL ya instalado en tu máquina:** crea la base `ecommerce` y ajusta `DATABASE_URL` en `.env`.
+
+**Migraciones y datos de prueba:**
+
+```powershell
+npm run db:generate
+npm run db:migrate
+npm run db:seed
+```
+
+- `db:migrate` solo aplica migraciones pendientes; **no** restaura ni borra datos.
+- `db:seed` solo inserta el demo si la BD está vacía (idempotente).
+- Para crear migraciones nuevas: `npm run db:migrate:dev`.
+- Para borrar todo y reseedar a propósito: `npm run db:seed:reset`.
+
+Si `prisma generate` falla por certificados SSL en tu red:
+
+```powershell
+$env:NODE_TLS_REJECT_UNAUTHORIZED=0
+npx prisma generate
+```
+
+**Iniciar el servidor API:**
+
+```powershell
+npm run dev
+```
+
+Comprueba que responde: [http://localhost:3000/api/health](http://localhost:3000/api/health)
+
+---
+
+### 2. Frontend Angular
+
+Abre **otra terminal**:
+
+```powershell
+cd angular-ecommerce-main
+npm install
+npm start
+```
+
+Abre en el navegador: [http://localhost:4200](http://localhost:4200)
+
+La URL de la API está en `angular-ecommerce-main/src/environments/environment.ts`:
+
+```typescript
+apiUrl: 'http://localhost:3000/api',
+mediaBaseUrl: 'http://localhost:3000', // imágenes: /images/products/...
+```
+
+Las imágenes del catálogo se resuelven desde el backend (`public/images/products`) como URL absoluta, por ejemplo:
+`http://localhost:3000/images/products/camiseta-futbol-pro-1.svg`
+
+---
+
+## Proyecto: `node-ecommerce` (Backend)
+
+### Qué hace
+
+API REST para un ecommerce deportivo con:
+
+- **Catálogo:** categorías (Fútbol, Running, Gym, etc.), productos con varias imágenes.
+- **Atributos dinámicos (EAV):** talla, tipo de tela, color, marca, etc., configurables por categoría.
+- **Pedidos:** cabecera con datos del cliente (nombre o razón social, teléfono, provincia, país, dirección de despacho, DNI/RUC).
+- **Detalle de pedido:** snapshot de producto (nombre, talla, tela, unidades, precios).
+- **Trazabilidad:** estados `pendiente` → `en_proceso` → `atendido` (con retrocesos y motivo).
+- **Ajustes de precio:** descuentos o modificaciones por pedido o por línea.
+
+### Estructura principal
+
+```
+node-ecommerce/
+├── prisma/
+│   ├── schema.prisma      # Modelo de datos
+│   ├── migrations/        # Migraciones SQL
+│   └── seed.ts            # Datos demo (idempotente; reset solo con db:seed:reset)
+├── src/
+│   ├── routes/            # Rutas Express (/api/...)
+│   ├── services/          # Lógica de negocio
+│   ├── controllers/
+│   └── validators/        # Validación con Zod
+├── docker-compose.yml     # PostgreSQL local
+└── .env.example
+```
+
+### Scripts útiles
+
+| Comando | Descripción |
+|---------|-------------|
+| `npm run dev` | Servidor en modo desarrollo (recarga automática) |
+| `npm run build` | Compila TypeScript a `dist/` |
+| `npm start` | Ejecuta build de producción |
+| `npm run db:migrate` | Aplica migraciones pendientes (`migrate deploy`, sin seed) |
+| `npm run db:migrate:dev` | Crea/aplica migraciones en local (`migrate dev --skip-seed`) |
+| `npm run db:seed` | Inserta demo solo si la BD está vacía (idempotente) |
+| `npm run db:seed:reset` | **Borra todos los datos** y vuelve a cargar el demo |
+| `npm run db:studio` | Abre Prisma Studio (explorar BD) |
+
+### Endpoints principales
+
+| Método | Ruta | Uso |
+|--------|------|-----|
+| GET | `/api/health` | Verificar que la API está activa |
+| GET | `/api/products` | Listado (query: `categorySlug`, `page`, `limit`) |
+| GET | `/api/products/:id` | Detalle con imágenes y atributos EAV |
+| GET | `/api/categories` | Árbol de categorías |
+| POST | `/api/orders` | Crear pedido (estado inicial: pendiente) |
+| GET | `/api/orders` | Listar pedidos (`status`, `search`, paginación) |
+| PATCH | `/api/orders/:id/status` | Cambiar estado del pedido |
+
+Documentación ampliada: [node-ecommerce/README.md](node-ecommerce/README.md)
+
+---
+
+## Proyecto: `angular-ecommerce-main` (Frontend)
+
+### Qué hace
+
+Interfaz web **SportShop** para comprar artículos deportivos:
+
+- Catálogo de productos desde el backend (ya no usa Fake Store API).
+- Filtro por categoría desde el menú (Fútbol, Running, Gym, Natación, Outdoor, Calzado).
+- Carrito en `localStorage`.
+- Checkout con formulario de datos del cliente y registro del pedido en el backend.
+- Página de confirmación con número de pedido (`PED-2026-00001`, etc.).
+
+### Estructura principal
+
+```
+angular-ecommerce-main/
+├── src/
+│   ├── app/
+│   │   ├── home/              # Listado de productos
+│   │   ├── product/           # Detalle de producto
+│   │   ├── cart/              # Carrito
+│   │   ├── checkout/          # Formulario de pedido
+│   │   ├── payment/           # Confirmación
+│   │   ├── core/services/     # ProductApiService, OrderService, etc.
+│   │   └── shared/            # Navbar, modelos, componentes
+│   └── environments/
+│       └── environment.ts     # URL del backend
+└── public/                    # Imágenes estáticas
+```
+
+### Rutas de la aplicación
+
+| Ruta | Pantalla |
+|------|----------|
+| `/` | Inicio (todos los productos o `?category=futbol`, etc.) |
+| `/products/:id` | Detalle de producto |
+| `/cart` | Carrito |
+| `/checkout` | Datos del cliente y confirmación de pedido |
+| `/admin/productos` | Panel para agregar, editar y eliminar productos (con carga de imágenes) |
+| `/admin/pedidos` | Visor de pedidos: filtrar y cambiar estado (pendiente / en proceso / atendido) |
+| `/PaymentSuccess` | Pedido registrado |
+
+### Scripts útiles
+
+| Comando | Descripción |
+|---------|-------------|
+| `npm start` | Servidor de desarrollo en `http://localhost:4200` |
+| `npm run build` | Build de producción en `dist/` |
+| `npm test` | Tests unitarios (Karma) |
+
+---
+
+## Flujo de compra (end-to-end)
+
+1. Usuario navega por categorías o ve todos los productos en el inicio.
+2. Agrega productos al carrito.
+3. En **Carrito** → **Ir al checkout**.
+4. Completa nombre, documento (DNI/RUC), teléfono, provincia, país y dirección de despacho.
+5. El frontend envía `POST /api/orders` al backend.
+6. Se abre WhatsApp con el detalle del pedido hacia el número configurado en Admin.
+7. Se muestra la confirmación con el número de pedido en estado **pendiente**.
+
+El número de WhatsApp se edita en **Admin → WhatsApp de pedidos** (`/admin/productos`).
+
+El **carrito** se guarda en PostgreSQL (`carts` / `cart_items`). Al agregar un producto se persiste de inmediato en la BD; la página `/cart` solo lista esos ítems. El ícono del carrito en el catálogo se pone verde cuando el producto ya está en el carrito.
+
+---
+
+## Solución de problemas
+
+| Problema | Posible causa | Qué hacer |
+|----------|---------------|-----------|
+| El frontend no muestra productos | Backend apagado o BD vacía | Ejecuta `npm run dev` y `npm run db:seed` en `node-ecommerce` |
+| Error CORS en el navegador | `CORS_ORIGIN` incorrecto | En `.env` del backend usa `http://localhost:4200` |
+| Error al conectar a PostgreSQL | BD no creada o URL incorrecta | Revisa `DATABASE_URL` o usa `docker compose up -d` |
+| `prisma generate` falla por SSL | Proxy/certificados corporativos | Usa `$env:NODE_TLS_REJECT_UNAUTHORIZED=0` antes de `npx prisma generate` |
+| Checkout devuelve error 500 | Migraciones no aplicadas | Ejecuta `npm run db:migrate` en `node-ecommerce` |
+| Se borraron productos/pedidos | Se usó `db:seed:reset` o un seed antiguo destructivo | Evita `db:seed:reset`; `db:migrate` y `db:seed` ya no limpian la BD |
+
+---
+
+## Orden de arranque rápido (resumen)
+
+```powershell
+# Terminal 1 — Backend
+cd node-ecommerce
+docker compose up -d          # solo si usas Docker
+npm run dev
+
+# Terminal 2 — Frontend
+cd angular-ecommerce-main
+npm start
+```
+
+---
+
+## Licencia
+
+Proyecto de uso educativo / propio. Ajusta la licencia según tus necesidades.

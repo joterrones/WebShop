@@ -1,0 +1,76 @@
+<div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm md:p-6">
+  <div
+    class="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0"
+  >
+    <a
+      [routerLink]="['/products', cartProduct().product.id]"
+      class="shrink-0 md:order-1"
+    >
+      <img
+        class="h-20 w-20 rounded object-contain bg-gray-50"
+        [alt]="cartProduct().product.name"
+        [src]="cartProduct().product.urlImg"
+      />
+    </a>
+
+    <label class="sr-only">Cantidad:</label>
+    <div class="flex items-center justify-between md:order-3 md:justify-end">
+      <div class="flex items-center">
+        <button
+          type="button"
+          (click)="decrease()"
+          class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200"
+          aria-label="Disminuir cantidad"
+        >
+          −
+        </button>
+        <span
+          class="w-10 shrink-0 text-center text-sm font-medium text-gray-900"
+        >
+          {{ cartProduct().quantity }}
+        </span>
+        <button
+          type="button"
+          (click)="increase()"
+          class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200"
+          aria-label="Aumentar cantidad"
+        >
+          +
+        </button>
+      </div>
+      <div class="text-end md:order-4 md:w-32">
+        <p class="text-base font-bold text-gray-900">
+          {{ lineTotal | currency }}
+        </p>
+        <p class="text-xs text-gray-500">
+          {{ cartProduct().product.price | currency }} c/u
+        </p>
+      </div>
+    </div>
+
+    <div class="w-full min-w-0 flex-1 space-y-2 md:order-2 md:max-w-md">
+      <a
+        [routerLink]="['/products', cartProduct().product.id]"
+        class="text-base font-medium text-gray-900 hover:underline"
+      >
+        {{ cartProduct().product.name }}
+      </a>
+      <p class="text-sm text-gray-600">
+        Talla: <span class="font-semibold">{{ cartProduct().talla }}</span>
+      </p>
+      @if (cartProduct().product.categoryName || cartProduct().product.category) {
+      <p class="text-sm text-gray-500 capitalize">
+        {{ cartProduct().product.categoryName ?? cartProduct().product.category }}
+      </p>
+      }
+
+      <button
+        type="button"
+        (click)="removeProduct()"
+        class="inline-flex items-center text-sm font-medium text-red-600 hover:underline"
+      >
+        Quitar
+      </button>
+    </div>
+  </div>
+</div>

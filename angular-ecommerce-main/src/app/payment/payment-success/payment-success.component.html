@@ -1,0 +1,43 @@
+<main class="py-14">
+  <section class="bg-white p-6 md:mx-auto max-w-lg rounded-lg shadow-sm border border-gray-100">
+    <svg viewBox="0 0 24 24" class="text-emerald-600 w-16 h-16 mx-auto my-6">
+      <path
+        fill="currentColor"
+        d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"
+      ></path>
+    </svg>
+    <div class="text-center">
+      <h3 class="md:text-2xl text-base text-gray-900 font-semibold">
+        ¡Pedido registrado!
+      </h3>
+      @if (orderNumber) {
+      <p class="text-gray-600 my-2">
+        Tu pedido
+        <span class="font-semibold text-gray-900">{{ orderNumber }}</span>
+        fue creado en estado <strong>pendiente</strong>.
+      </p>
+      } @else {
+      <p class="text-gray-600 my-2">
+        Gracias por tu compra. Tu pedido fue registrado correctamente.
+      </p>
+      }
+      @if (whatsappOpened) {
+      <p class="text-sm text-emerald-700 my-2">
+        Se abrió WhatsApp con el detalle del pedido para enviarlo a la tienda.
+      </p>
+      } @else {
+      <p class="text-sm text-gray-500">
+        Te contactaremos para confirmar el pago y despacho.
+      </p>
+      }
+      <div class="py-5 text-center">
+        <a
+          routerLink="/"
+          class="inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-200"
+        >
+          Seguir comprando
+        </a>
+      </div>
+    </div>
+  </section>
+</main>

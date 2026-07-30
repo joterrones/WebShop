@@ -1,0 +1,88 @@
+<main class="bg-white py-8 antialiased md:py-16">
+  <section class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+    <h2 class="text-xl font-semibold text-gray-900 sm:text-2xl">
+      Carrito de compras
+    </h2>
+    <p class="mt-1 text-sm text-gray-500">
+      Solo se muestran productos guardados en la base de datos.
+    </p>
+
+    <div class="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
+      <div class="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
+        <div class="space-y-6">
+          @if (loading) {
+          <p class="text-sm text-gray-500">Cargando carrito...</p>
+          } @else if (errorMessage) {
+          <p class="text-sm text-red-600">{{ errorMessage }}</p>
+          } @else if (cartProducts.length === 0) {
+          <div class="flex flex-col mx-auto">
+            <div class="relative size-64 mx-auto">
+              <img
+                class="object-contain object-center"
+                src="/img/empty-cart.png"
+                alt="Carrito vacío"
+              />
+            </div>
+            <div class="flex flex-col items-center">
+              <h2 class="text-center font-bold text-2xl">Tu carrito está vacío</h2>
+              <p class="text-center text-pretty text-gray-500 max-w-80">
+                Aún no has agregado productos.
+                <a
+                  routerLink="/"
+                  class="inline-flex items-center gap-2 text-sm font-medium text-emerald-600 underline hover:no-underline"
+                >
+                  Seguir comprando
+                </a>
+              </p>
+            </div>
+          </div>
+          } @else {
+          @for (cartProduct of cartProducts; track cartProduct.id) {
+          <app-cart-product
+            (updateCartEvent)="refresh()"
+            [cartProduct]="cartProduct"
+          />
+          }
+          }
+        </div>
+      </div>
+
+      <div class="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
+        <div
+          class="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6"
+        >
+          <p class="text-xl font-semibold text-gray-900">Resumen</p>
+
+          <div class="space-y-4">
+            <dl
+              class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2"
+            >
+              <dt class="text-base font-bold text-gray-900">Total</dt>
+              <dd class="text-base font-bold text-gray-900">
+                {{ total | currency }}
+              </dd>
+            </dl>
+          </div>
+
+          <button
+            type="button"
+            (click)="goToCheckout()"
+            [disabled]="cartProducts.length === 0"
+            class="flex w-full items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-200 disabled:opacity-50"
+          >
+            Ir al checkout
+          </button>
+
+          <div class="flex items-center justify-center gap-2">
+            <a
+              routerLink="/"
+              class="inline-flex items-center gap-2 text-sm font-medium text-emerald-600 underline hover:no-underline"
+            >
+              Seguir comprando
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

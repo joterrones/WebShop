@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#7c2d12"/>
+  <circle cx="200" cy="160" r="70" fill="rgba(255,255,255,0.15)"/>
+  <text x="200" y="175" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-size="22" font-weight="bold">SportShop</text>
+  <text x="200" y="260" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-size="18">Top Gym</text>
+  <text x="200" y="290" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-family="Arial,sans-serif" font-size="14">Vista 1</text>
+</svg>
