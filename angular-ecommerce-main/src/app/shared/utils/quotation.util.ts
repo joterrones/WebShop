@@ -376,7 +376,7 @@ function buildDocumentHtml(order: Order, logoAbsoluteUrl: string): string {
           <tr><td>IGV 18%</td><td>${money(igv)}</td></tr>
           <tr><td>ENVÍO</td><td>${money(shipping)}</td></tr>
           ${discount > 0 ? `<tr><td>DESCUENTO</td><td>- ${money(discount)}</td></tr>` : ''}
-          <tr class="total"><td>RESTA</td><td>${money(total)}</td></tr>
+          <tr class="total"><td>TOTAL</td><td>${money(total)}</td></tr>
         </table>
       </div>
     </div>
