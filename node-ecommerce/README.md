@@ -120,3 +120,12 @@ Para usar tus propias fotos: copia JPG/PNG a `public/images/products/` y actuali
 `pendiente` → `en_proceso` → `atendido`
 
 Los retrocesos requieren el campo `reason` en el body.
+
+
+//Para desplegar ubicarse en la carpeta WebShop/
+cp .env.example .env
+# edita .env con RDS, IPs, puertos
+npm run sync-env
+npm run build:api
+npm run build:web
+npm run start:api
