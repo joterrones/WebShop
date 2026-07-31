@@ -18,7 +18,7 @@ npm install
 Ejemplo de `.env` con Docker:
 
 ```
-DATABASE_URL=postgresql://postgres:123@localhost:5432/ecomerce
+DATABASE_URL=postgresql://postgres:123@/ecomerce
 PORT=3900
 CORS_ORIGIN=http://localhost:4900
 JWT_SECRET=alaba-sport-dev-secret-change-me

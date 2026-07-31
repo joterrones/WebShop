@@ -8,7 +8,7 @@ async function main() {
   await prisma.$connect();
   app.listen(env.PORT, () => {
     console.log(`Server running on http://localhost:${env.PORT}`);
-    console.log(`API: http://localhost:${env.PORT}/api`);
+    console.log(`API: http://34.237.18.97:${env.PORT}/api`);
   });
 }
 
