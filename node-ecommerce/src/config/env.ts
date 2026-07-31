@@ -17,10 +17,10 @@ config({ path: envPath });
 
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1, 'DATABASE_URL es obligatoria en .env'),
-  PORT: z.coerce.number().default(3000),
-  CORS_ORIGIN: z.string().default('http://localhost:4200'),
+  PORT: z.coerce.number().default(3900),
+  CORS_ORIGIN: z.string().default('http://localhost:4900'),
   /** Base pública del API (para URLs de imágenes estáticas) */
-  PUBLIC_BASE_URL: z.string().default('http://localhost:3000'),
+  PUBLIC_BASE_URL: z.string().default('http://localhost:3900'),
   JWT_SECRET: z
     .string()
     .min(16, 'JWT_SECRET debe tener al menos 16 caracteres')

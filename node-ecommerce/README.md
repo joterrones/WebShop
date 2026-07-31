@@ -19,8 +19,8 @@ Ejemplo de `.env` con Docker:
 
 ```
 DATABASE_URL=postgresql://postgres:123@localhost:5432/ecommerce
-PORT=3000
-CORS_ORIGIN=http://localhost:4200
+PORT=3900
+CORS_ORIGIN=http://localhost:4900
 JWT_SECRET=alaba-sport-dev-secret-change-me
 JWT_EXPIRES_IN=8h
 ```
@@ -61,7 +61,7 @@ $env:NODE_TLS_REJECT_UNAUTHORIZED=0
 npx prisma generate
 ```
 
-API disponible en `http://localhost:3000/api`
+API disponible en `http://localhost:3900/api`
 
 ## Imágenes de productos
 
@@ -69,7 +69,7 @@ Las imágenes se sirven desde la carpeta `public/images/` como archivos estátic
 
 | Carpeta física | URL pública |
 |----------------|-------------|
-| `public/images/products/` | `http://localhost:3000/images/products/<archivo>` |
+| `public/images/products/` | `http://localhost:3900/images/products/<archivo>` |
 
 En la BD se guarda la **ruta relativa** (ej. `/images/products/camiseta-futbol-pro-1.svg`).  
 La API responde con la URL absoluta usando `PUBLIC_BASE_URL`.

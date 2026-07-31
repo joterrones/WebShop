@@ -15,8 +15,8 @@ Ecomerce2026/
 
 | Proyecto | Carpeta | Tecnología | Puerto por defecto |
 |----------|---------|------------|-------------------|
-| **Frontend** | `angular-ecommerce-main` | Angular 19, Tailwind CSS | `4200` |
-| **Backend** | `node-ecommerce` | Express, Prisma, PostgreSQL | `3000` |
+| **Frontend** | `angular-ecommerce-main` | Angular 19, Tailwind CSS | `4900` |
+| **Backend** | `node-ecommerce` | Express, Prisma, PostgreSQL | `3900` |
 
 El frontend consume la API del backend para listar productos, filtrar por categoría deportiva y registrar pedidos con datos del cliente (DNI/RUC, despacho, etc.).
 
@@ -27,14 +27,14 @@ El frontend consume la API del backend para listar productos, filtrar por catego
 | Parte | ¿BD? | Detalle |
 |--------|------|---------|
 | **`node-ecommerce`** | Sí | PostgreSQL vía Prisma (`DATABASE_URL`) |
-| **`angular-ecommerce-main`** | No | Solo llama a la API (`http://localhost:3000/api`) |
+| **`angular-ecommerce-main`** | No | Solo llama a la API (`http://localhost:3900/api`) |
 
 Credenciales actuales (en `.env` / `.env.example` del backend):
 
 | Campo | Valor |
 |-------|--------|
 | Servidor | `localhost` |
-| Base de datos | `ecommerce` |
+| Base de datos | `ecomerce` |
 | Usuario | `postgres` |
 | Contraseña | `123` |
 | URL | `postgresql://postgres:123@localhost:5432/ecommerce` |
@@ -44,7 +44,7 @@ Ahí se guardan categorías, productos, atributos EAV, imágenes y pedidos.
 Las **imágenes de productos** se publican como estáticos desde `node-ecommerce/public/images/`:
 
 - Carpeta: `public/images/products/`
-- URL: `http://localhost:3000/images/products/<archivo>`
+- URL: `http://localhost:3900/images/products/<archivo>`
 
 ---
 
@@ -76,9 +76,9 @@ Edita `.env` si tus credenciales de PostgreSQL son distintas:
 
 ```env
 DATABASE_URL=postgresql://postgres:123@localhost:5432/ecommerce
-PORT=3000
-CORS_ORIGIN=http://localhost:4200
-PUBLIC_BASE_URL=http://localhost:3000
+PORT=3900
+CORS_ORIGIN=http://localhost:4900
+PUBLIC_BASE_URL=http://localhost:3900
 ```
 
 **Opción A — PostgreSQL con Docker (recomendado):**
@@ -87,7 +87,7 @@ PUBLIC_BASE_URL=http://localhost:3000
 docker compose up -d
 ```
 
-**Opción B — PostgreSQL ya instalado en tu máquina:** crea la base `ecommerce` y ajusta `DATABASE_URL` en `.env`.
+**Opción B — PostgreSQL ya instalado en tu máquina:** crea la base `ecomerce` y ajusta `DATABASE_URL` en `.env`.
 
 **Migraciones y datos de prueba:**
 
@@ -115,7 +115,7 @@ npx prisma generate
 npm run dev
 ```
 
-Comprueba que responde: [http://localhost:3000/api/health](http://localhost:3000/api/health)
+Comprueba que responde: [http://localhost:3900/api/health](http://localhost:3900/api/health)
 
 ---
 
@@ -129,17 +129,17 @@ npm install
 npm start
 ```
 
-Abre en el navegador: [http://localhost:4200](http://localhost:4200)
+Abre en el navegador: [http://localhost:4900](http://localhost:4900)
 
 La URL de la API está en `angular-ecommerce-main/src/environments/environment.ts`:
 
 ```typescript
-apiUrl: 'http://localhost:3000/api',
-mediaBaseUrl: 'http://localhost:3000', // imágenes: /images/products/...
+apiUrl: 'http://localhost:3900/api',
+mediaBaseUrl: 'http://localhost:3900', // imágenes: /images/products/...
 ```
 
 Las imágenes del catálogo se resuelven desde el backend (`public/images/products`) como URL absoluta, por ejemplo:
-`http://localhost:3000/images/products/camiseta-futbol-pro-1.svg`
+`http://localhost:3900/images/products/camiseta-futbol-pro-1.svg`
 
 ---
 
@@ -248,7 +248,7 @@ angular-ecommerce-main/
 
 | Comando | Descripción |
 |---------|-------------|
-| `npm start` | Servidor de desarrollo en `http://localhost:4200` |
+| `npm start` | Servidor de desarrollo en `http://localhost:4900` |
 | `npm run build` | Build de producción en `dist/` |
 | `npm test` | Tests unitarios (Karma) |
 
@@ -275,7 +275,7 @@ El **carrito** se guarda en PostgreSQL (`carts` / `cart_items`). Al agregar un p
 | Problema | Posible causa | Qué hacer |
 |----------|---------------|-----------|
 | El frontend no muestra productos | Backend apagado o BD vacía | Ejecuta `npm run dev` y `npm run db:seed` en `node-ecommerce` |
-| Error CORS en el navegador | `CORS_ORIGIN` incorrecto | En `.env` del backend usa `http://localhost:4200` |
+| Error CORS en el navegador | `CORS_ORIGIN` incorrecto | En `.env` del backend usa `http://localhost:4900` |
 | Error al conectar a PostgreSQL | BD no creada o URL incorrecta | Revisa `DATABASE_URL` o usa `docker compose up -d` |
 | `prisma generate` falla por SSL | Proxy/certificados corporativos | Usa `$env:NODE_TLS_REJECT_UNAUTHORIZED=0` antes de `npx prisma generate` |
 | Checkout devuelve error 500 | Migraciones no aplicadas | Ejecuta `npm run db:migrate` en `node-ecommerce` |

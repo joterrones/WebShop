@@ -46,7 +46,7 @@ A modern e-commerce frontend application built with Angular 19, inspired by Amaz
    ```
 4. Open your browser and navigate to:
    ```
-   http://localhost:4200
+   http://localhost:4900
    ```
 
 ## 📁 Project Structure

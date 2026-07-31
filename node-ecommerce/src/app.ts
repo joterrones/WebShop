@@ -15,7 +15,7 @@ export function createApp() {
   );
   app.use(express.json());
 
-  // Archivos estáticos: http://localhost:3000/images/...
+  // Archivos estáticos: http://localhost:3900/images/...
   app.use('/images', express.static(`${publicDir}/images`));
 
   app.use('/api', apiRoutes);

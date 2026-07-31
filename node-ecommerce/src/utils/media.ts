@@ -2,7 +2,7 @@ import { env } from '../config/env';
 
 /**
  * Convierte una ruta relativa de la carpeta pública en URL absoluta.
- * Ej: "/images/products/foo.svg" → "http://localhost:3000/images/products/foo.svg"
+ * Ej: "/images/products/foo.svg" → "http://localhost:3900/images/products/foo.svg"
  * Si ya es URL absoluta (http/https), se devuelve igual.
  */
 export function toPublicUrl(pathOrUrl: string): string {

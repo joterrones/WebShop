@@ -3,4 +3,4 @@
 # como ruta relativa: /images/products/nombre-archivo.jpg
 #
 # URL pública de ejemplo:
-#   http://localhost:3000/images/products/camiseta-futbol-pro-1.svg
+#   http://localhost:3900/images/products/camiseta-futbol-pro-1.svg

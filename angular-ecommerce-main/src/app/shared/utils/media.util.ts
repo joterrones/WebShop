@@ -2,7 +2,7 @@ import { environment } from '../../../environments/environment';
 
 /**
  * Resuelve URLs de imágenes del catálogo publicadas por el backend
- * desde `public/images/products` → `http://localhost:3000/images/products/...`
+ * desde `public/images/products` → `http://localhost:3900/images/products/...`
  */
 export function resolveMediaUrl(pathOrUrl: string | null | undefined): string {
   if (!pathOrUrl) {
