@@ -40,10 +40,10 @@
       </div>
       <div class="text-end md:order-4 md:w-32">
         <p class="text-base font-bold text-gray-900">
-          {{ lineTotal | currency }}
+          {{ lineTotal | solCurrency }}
         </p>
         <p class="text-xs text-gray-500">
-          {{ cartProduct().product.price | currency }} c/u
+          {{ cartProduct().product.price | solCurrency }} c/u
         </p>
       </div>
     </div>

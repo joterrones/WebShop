@@ -61,9 +61,9 @@
       </p>
     </div>
     <div class="flex gap-2 text-2xl font-bold text-gray-900 items-baseline">
-      <p>{{ product().price | currency }}</p>
+      <p>{{ product().price | solCurrency }}</p>
       <del class="text-gray-500 text-base">{{
-        product().previousPrice | currency
+        product().previousPrice | solCurrency
       }}</del>
     </div>
     <div class="p-2">

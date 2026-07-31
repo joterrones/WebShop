@@ -133,7 +133,7 @@
               <p class="text-gray-500">Cant: {{ item.quantity }}</p>
             </div>
             <span class="font-medium">
-              {{ item.product.price * item.quantity | currency }}
+              {{ item.product.price * item.quantity | solCurrency }}
             </span>
           </li>
           }
@@ -141,15 +141,15 @@
         <dl class="mt-4 space-y-2 text-sm">
           <div class="flex justify-between">
             <dt class="text-gray-600">Subtotal</dt>
-            <dd>{{ subtotal | currency }}</dd>
+            <dd>{{ subtotal | solCurrency }}</dd>
           </div>
           <div class="flex justify-between">
             <dt class="text-gray-600">Envío</dt>
-            <dd>{{ shippingCost | currency }}</dd>
+            <dd>{{ shippingCost | solCurrency }}</dd>
           </div>
           <div class="flex justify-between border-t border-gray-200 pt-2 font-bold">
             <dt>Total</dt>
-            <dd>{{ total | currency }}</dd>
+            <dd>{{ total | solCurrency }}</dd>
           </div>
         </dl>
       </aside>

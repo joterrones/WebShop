@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -10,10 +10,11 @@ import {
   OrderStatus,
 } from '../../shared/models/order';
 import { openOrderQuotation } from '../../shared/utils/quotation.util';
+import { SolCurrencyPipe } from '../../shared/pipes/sol-currency.pipe';
 
 @Component({
   selector: 'app-admin-orders',
-  imports: [FormsModule, CurrencyPipe, DatePipe, RouterLink],
+  imports: [FormsModule, SolCurrencyPipe, DatePipe, RouterLink],
   templateUrl: './admin-orders.component.html',
 })
 export class AdminOrdersComponent implements OnInit {

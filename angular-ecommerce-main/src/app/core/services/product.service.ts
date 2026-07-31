@@ -21,6 +21,7 @@ export class ProductService {
       params.categorySlug ?? '__all__',
       params.search?.trim() ?? '',
       params.categoryId ?? '',
+      params.showInBanner === undefined ? '' : String(params.showInBanner),
       params.isActive === undefined ? '' : String(params.isActive),
       params.includeInactive ? '1' : '0',
     ].join('|');

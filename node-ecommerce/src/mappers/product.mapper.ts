@@ -23,6 +23,9 @@ export interface ProductRow {
   previousPrice: { toString(): string } | number | null;
   stockQuantity: number;
   isActive: boolean;
+  showInBanner: boolean;
+  reviews: number;
+  ratingRate: { toString(): string } | number;
   category: { slug: string; name: string };
   images: ProductImageRow[];
   attributeValues: ProductAttributeValueRow[];
@@ -60,6 +63,9 @@ export function mapProductToResponse(product: ProductRow) {
     inStock: product.stockQuantity > 0 && product.isActive,
     stockQuantity: product.stockQuantity,
     isActive: product.isActive,
+    showInBanner: product.showInBanner,
+    reviews: product.reviews,
+    ratingRate: toNumber(product.ratingRate),
     attributes,
     slug: product.slug,
   };

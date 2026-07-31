@@ -1,4 +1,3 @@
-import { CurrencyPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -16,13 +15,14 @@ import {
   Product,
   ProductWriteDto,
 } from '../../shared/models/product';
+import { SolCurrencyPipe } from '../../shared/pipes/sol-currency.pipe';
 import { resolveMediaUrl } from '../../shared/utils/media.util';
 
 export type ProductStatusFilter = 'all' | 'active' | 'inactive';
 
 @Component({
   selector: 'app-admin-products',
-  imports: [ReactiveFormsModule, FormsModule, CurrencyPipe, RouterLink],
+  imports: [ReactiveFormsModule, FormsModule, SolCurrencyPipe, RouterLink],
   templateUrl: './admin-products.component.html',
 })
 export class AdminProductsComponent implements OnInit {
@@ -46,6 +46,7 @@ export class AdminProductsComponent implements OnInit {
 
   filterCategoryId = '';
   filterStatus: ProductStatusFilter = 'all';
+  filterSearch = '';
 
   imagePaths: string[] = [];
   imagePreviews: string[] = [];
@@ -60,6 +61,9 @@ export class AdminProductsComponent implements OnInit {
     previousPrice: [null as number | null],
     stockQuantity: [0, [Validators.required, Validators.min(0)]],
     isActive: [true],
+    showInBanner: [false],
+    reviews: [0, [Validators.required, Validators.min(0)]],
+    ratingRate: [5, [Validators.required, Validators.min(0), Validators.max(5)]],
   });
 
   readonly whatsappForm = this.fb.nonNullable.group({
@@ -119,12 +123,17 @@ export class AdminProductsComponent implements OnInit {
 
     const params: {
       categoryId?: string;
+      search?: string;
       isActive?: boolean;
       includeInactive?: boolean;
     } = {};
 
     if (this.filterCategoryId) {
       params.categoryId = this.filterCategoryId;
+    }
+
+    if (this.filterSearch.trim()) {
+      params.search = this.filterSearch.trim();
     }
 
     if (this.filterStatus === 'active') {
@@ -155,6 +164,7 @@ export class AdminProductsComponent implements OnInit {
   clearFilters(): void {
     this.filterCategoryId = '';
     this.filterStatus = 'all';
+    this.filterSearch = '';
     this.loadProducts();
   }
 
@@ -183,6 +193,9 @@ export class AdminProductsComponent implements OnInit {
       previousPrice: null,
       stockQuantity: 0,
       isActive: true,
+      showInBanner: false,
+      reviews: 0,
+      ratingRate: 5,
     });
   }
 
@@ -207,6 +220,9 @@ export class AdminProductsComponent implements OnInit {
       previousPrice: product.previousPrice,
       stockQuantity: product.stockQuantity ?? 0,
       isActive: product.isActive ?? true,
+      showInBanner: product.showInBanner ?? false,
+      reviews: product.reviews ?? 0,
+      ratingRate: product.ratingRate ?? 5,
     });
   }
 
@@ -284,6 +300,9 @@ export class AdminProductsComponent implements OnInit {
         previousPrice: previous && previous > 0 ? previous : null,
         stockQuantity: Number(raw.stockQuantity),
         isActive: raw.isActive,
+        showInBanner: raw.showInBanner,
+        reviews: Number(raw.reviews),
+        ratingRate: Number(raw.ratingRate),
         images: paths.map((url, index) => ({
           url,
           sortOrder: index,

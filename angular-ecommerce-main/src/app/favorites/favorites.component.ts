@@ -1,14 +1,15 @@
-import { AsyncPipe, CurrencyPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   FavoriteProduct,
   FavoritesService,
 } from '../core/services/favorites.service';
+import { SolCurrencyPipe } from '../shared/pipes/sol-currency.pipe';
 
 @Component({
   selector: 'app-favorites',
-  imports: [AsyncPipe, CurrencyPipe, RouterLink],
+  imports: [AsyncPipe, SolCurrencyPipe, RouterLink],
   templateUrl: './favorites.component.html',
 })
 export class FavoritesComponent {

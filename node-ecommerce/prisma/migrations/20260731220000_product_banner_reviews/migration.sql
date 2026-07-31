@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "products" ADD COLUMN "show_in_banner" BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE "products" ADD COLUMN "reviews" INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE "products" ADD COLUMN "rating_rate" DECIMAL(2,1) NOT NULL DEFAULT 5;

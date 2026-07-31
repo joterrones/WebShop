@@ -1,4 +1,4 @@
-import { AsyncPipe, CurrencyPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
@@ -12,10 +12,11 @@ import {
   CartProduct,
 } from '../shared/models/cart-product';
 import { Product, ProductAttributes } from '../shared/models/product';
+import { SolCurrencyPipe } from '../shared/pipes/sol-currency.pipe';
 
 @Component({
   selector: 'app-product',
-  imports: [CurrencyPipe, AsyncPipe, RouterLink],
+  imports: [SolCurrencyPipe, AsyncPipe, RouterLink],
   templateUrl: './product.component.html',
 })
 export class ProductComponent implements OnInit {
@@ -66,6 +67,11 @@ export class ProductComponent implements OnInit {
 
   displayImage(product: Product): string {
     return this.selectedImageUrl || product.urlImg;
+  }
+
+  ratePercent(product: Product): number {
+    const rate = product.ratingRate ?? 0;
+    return Math.max(0, Math.min(100, (rate / 5) * 100));
   }
 
   selectTalla(talla: AvailableTalla): void {

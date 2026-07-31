@@ -23,6 +23,9 @@ export const createProductSchema = z.object({
   previousPrice: z.number().positive().optional().nullable(),
   stockQuantity: z.number().int().min(0).default(0),
   isActive: z.boolean().default(true),
+  showInBanner: z.boolean().default(false),
+  reviews: z.number().int().min(0).default(0),
+  ratingRate: z.number().min(0).max(5).default(5),
   images: z.array(imageSchema).optional(),
   attributeValues: z.array(attributeValueSchema).optional(),
 });
@@ -35,6 +38,13 @@ export const listProductsSchema = z.object({
   categoryId: z.string().uuid().optional(),
   categorySlug: z.string().optional(),
   search: z.string().optional(),
+  showInBanner: z
+    .union([z.boolean(), z.enum(['true', 'false'])])
+    .optional()
+    .transform((v) => {
+      if (v === undefined) return undefined;
+      return v === true || v === 'true';
+    }),
   /** Filtra por activo/inactivo. Si no se envía, ver includeInactive. */
   isActive: z
     .union([z.boolean(), z.enum(['true', 'false'])])

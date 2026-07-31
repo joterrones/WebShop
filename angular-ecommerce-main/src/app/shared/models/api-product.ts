@@ -15,6 +15,9 @@ export interface ApiProductResponse {
   inStock: boolean;
   stockQuantity?: number;
   isActive?: boolean;
+  showInBanner?: boolean;
+  reviews?: number;
+  ratingRate?: number;
   attributes: ProductAttributes;
   slug?: string;
 }

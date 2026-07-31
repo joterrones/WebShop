@@ -1,13 +1,13 @@
-import { CurrencyPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CartProductComponent } from './components/cart-product/cart-product.component';
 import { CartService } from '../core/services/cart.service';
 import { CartProduct } from '../shared/models/cart-product';
+import { SolCurrencyPipe } from '../shared/pipes/sol-currency.pipe';
 
 @Component({
   selector: 'app-cart',
-  imports: [CartProductComponent, CurrencyPipe, RouterLink],
+  imports: [CartProductComponent, SolCurrencyPipe, RouterLink],
   templateUrl: './cart.component.html',
 })
 export class CartComponent implements OnInit {

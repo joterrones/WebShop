@@ -3,6 +3,13 @@
 >
   <!-- Image area -->
   <div class="relative bg-white p-6 sm:p-8">
+    @if (discountPercent() > 0) {
+    <span
+      class="absolute top-3 left-3 z-10 bg-[#E30613] text-white text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-tl-md rounded-br-md shadow-sm"
+    >
+      -{{ discountPercent() }}%
+    </span>
+    }
     @if (!product().inStock) {
     <span
       class="absolute top-3 right-3 z-10 bg-red-500 text-white text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-tl-md rounded-br-md shadow-sm"
@@ -27,40 +34,10 @@
       />
     </a>
 
-    <!-- Floating action buttons -->
+    <!-- Floating action buttons: View + Favorito -->
     <div
       class="absolute top-1/2 right-3 -translate-y-1/2 flex flex-col gap-2 opacity-100 translate-x-0 md:opacity-0 md:translate-x-3 md:group-hover:opacity-100 md:group-hover:translate-x-0 transition-all duration-300"
     >
-      <button
-        type="button"
-        (click)="addToCart($event)"
-        [disabled]="!product().inStock || adding"
-        class="group/btn relative inline-flex items-center justify-center size-10 rounded-md transition-colors shadow-sm disabled:opacity-40 disabled:pointer-events-none"
-        [class.bg-emerald-600]="inCart()"
-        [class.text-white]="inCart()"
-        [class.bg-gray-100]="!inCart()"
-        [class.text-gray-700]="!inCart()"
-        [class.hover:bg-emerald-600]="!inCart()"
-        [class.hover:text-white]="!inCart()"
-        [attr.aria-label]="inCart() ? 'Ya en el carrito' : 'Agregar al carrito'"
-      >
-        <svg
-          class="size-4"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          viewBox="0 0 576 512"
-        >
-          <path
-            d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 336c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"
-          />
-        </svg>
-        <span
-          class="absolute right-full mr-2 px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded whitespace-nowrap opacity-0 group-hover/btn:opacity-100 pointer-events-none transition-opacity"
-        >
-          {{ inCart() ? 'En el carrito' : 'Agregar al carrito' }}
-        </span>
-      </button>
-
       <a
         [routerLink]="['products', product().id]"
         class="group/btn relative inline-flex items-center justify-center size-10 rounded-md bg-gray-100 text-gray-700 hover:bg-blue-600 hover:text-white transition-colors shadow-sm"
@@ -136,7 +113,6 @@
     <!-- Stars -->
     <div class="flex items-center gap-2 text-sm">
       <div class="relative inline-flex">
-        <!-- empty stars (gray) -->
         <div class="flex gap-0.5 text-gray-300">
           @for (_ of [1, 2, 3, 4, 5]; track $index) {
           <svg
@@ -151,7 +127,6 @@
           </svg>
           }
         </div>
-        <!-- filled stars (yellow), clipped by rate% -->
         <div
           class="absolute inset-y-0 left-0 flex gap-0.5 text-yellow-400 overflow-hidden"
           [style.width.%]="ratePercent()"
@@ -177,11 +152,11 @@
     <div class="flex items-baseline gap-2 mt-1">
       @if (product().previousPrice) {
       <span class="text-sm line-through text-gray-400">
-        {{ product().previousPrice | currency }}
+        {{ product().previousPrice | solCurrency }}
       </span>
       }
       <span class="text-lg font-bold text-blue-600">
-        {{ product().price | currency }}
+        {{ product().price | solCurrency }}
       </span>
     </div>
   </div>

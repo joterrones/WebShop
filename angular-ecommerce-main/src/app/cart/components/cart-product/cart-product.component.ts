@@ -1,12 +1,12 @@
-import { CurrencyPipe } from '@angular/common';
 import { Component, inject, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
 import { CartProduct } from '../../../shared/models/cart-product';
+import { SolCurrencyPipe } from '../../../shared/pipes/sol-currency.pipe';
 
 @Component({
   selector: 'app-cart-product',
-  imports: [CurrencyPipe, RouterLink],
+  imports: [SolCurrencyPipe, RouterLink],
   templateUrl: './cart-product.component.html',
 })
 export class CartProductComponent {

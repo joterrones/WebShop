@@ -25,6 +25,7 @@ export interface ListProductsParams {
   categorySlug?: string;
   categoryId?: string;
   search?: string;
+  showInBanner?: boolean;
   /** undefined = todos (con includeInactive); true/false = filtro */
   isActive?: boolean;
   includeInactive?: boolean;
@@ -60,6 +61,9 @@ export class ProductApiService {
     }
     if (paramsObj.search?.trim()) {
       params = params.set('search', paramsObj.search.trim());
+    }
+    if (paramsObj.showInBanner !== undefined) {
+      params = params.set('showInBanner', String(paramsObj.showInBanner));
     }
     if (paramsObj.isActive !== undefined) {
       params = params.set('isActive', String(paramsObj.isActive));
@@ -112,7 +116,6 @@ export class ProductApiService {
   }
 
   private mapToProduct(apiProduct: ApiProductResponse): Product {
-    const hash = this.hashId(apiProduct.id);
     const images = (apiProduct.images ?? []).map((url) => resolveMediaUrl(url));
     const urlImg = resolveMediaUrl(apiProduct.urlImg) || images[0] || '';
 
@@ -123,8 +126,8 @@ export class ProductApiService {
       urlImg,
       images,
       imagePaths: apiProduct.imagePaths,
-      reviews: 10 + (hash % 90),
-      ratingRate: 3.5 + (hash % 15) / 10,
+      reviews: apiProduct.reviews ?? 0,
+      ratingRate: apiProduct.ratingRate ?? 5,
       category: apiProduct.category,
       categoryId: apiProduct.categoryId,
       categoryName: apiProduct.categoryName,
@@ -133,12 +136,9 @@ export class ProductApiService {
       inStock: apiProduct.inStock,
       stockQuantity: apiProduct.stockQuantity,
       isActive: apiProduct.isActive,
+      showInBanner: apiProduct.showInBanner ?? false,
       attributes: apiProduct.attributes,
       slug: apiProduct.slug,
     };
-  }
-
-  private hashId(id: string): number {
-    return id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   }
 }

@@ -79,26 +79,11 @@ export class HomeComponent implements OnInit {
   }
 
   private loadHeroProducts(): void {
-    this.productService.getAll().subscribe({
+    this.productService.getAll({ showInBanner: true }).subscribe({
       next: (products) => {
-        const withImage = products.filter((p) => !!p.urlImg);
-        this.heroProducts = this.pickRandom(withImage, 2);
+        this.heroProducts = products.filter((p) => !!p.urlImg).slice(0, 2);
       },
     });
-  }
-
-  private pickRandom(products: Product[], count: number): Product[] {
-    if (products.length <= count) {
-      return [...products];
-    }
-
-    const pool = [...products];
-    const picked: Product[] = [];
-    for (let i = 0; i < count; i++) {
-      const index = Math.floor(Math.random() * pool.length);
-      picked.push(pool.splice(index, 1)[0]);
-    }
-    return picked;
   }
 
   private formatSlug(slug: string): string {

@@ -107,11 +107,11 @@
             <div class="mt-2 flex items-baseline gap-2">
               @if (item.previousPrice) {
               <span class="text-sm text-gray-400 line-through">
-                {{ item.previousPrice | currency }}
+                {{ item.previousPrice | solCurrency }}
               </span>
               }
               <span class="text-lg font-bold text-[#E30613]">
-                {{ item.price | currency }}
+                {{ item.price | solCurrency }}
               </span>
             </div>
             @if (!item.inStock) {

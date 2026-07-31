@@ -1,34 +1,23 @@
-import { CurrencyPipe } from '@angular/common';
-import { Component, computed, inject, input, OnInit } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { CartService } from '../../../core/services/cart.service';
 import { FavoritesService } from '../../../core/services/favorites.service';
 import { Product } from '../../../shared/models/product';
+import { SolCurrencyPipe } from '../../../shared/pipes/sol-currency.pipe';
 
 @Component({
   selector: 'app-home-product',
-  imports: [CurrencyPipe, RouterLink],
+  imports: [SolCurrencyPipe, RouterLink],
   templateUrl: './home-product.component.html',
 })
-export class HomeProductComponent implements OnInit {
-  private readonly cartService = inject(CartService);
+export class HomeProductComponent {
   private readonly favoritesService = inject(FavoritesService);
 
   product = input.required<Product>();
-  adding = false;
-
-  private readonly productIds = toSignal(this.cartService.productIds$, {
-    initialValue: new Set<string>(),
-  });
 
   private readonly favoriteIds = toSignal(this.favoritesService.ids$, {
     initialValue: new Set<string>(),
   });
-
-  readonly inCart = computed(() =>
-    this.productIds().has(this.product().id),
-  );
 
   readonly isFavorite = computed(() =>
     this.favoriteIds().has(this.product().id),
@@ -39,27 +28,12 @@ export class HomeProductComponent implements OnInit {
     return Math.max(0, Math.min(100, (rate / 5) * 100));
   });
 
-  ngOnInit(): void {
-    this.cartService.ensureLoaded();
-  }
-
-  addToCart(event: Event): void {
-    event.preventDefault();
-    event.stopPropagation();
-
+  discountPercent = computed(() => {
     const product = this.product();
-    if (!product.inStock || this.adding) return;
-
-    this.adding = true;
-    this.cartService.addProduct(product, 1, 'M').subscribe({
-      next: () => {
-        this.adding = false;
-      },
-      error: () => {
-        this.adding = false;
-      },
-    });
-  }
+    const previous = product.previousPrice;
+    if (!previous || previous <= product.price) return 0;
+    return Math.round(((previous - product.price) / previous) * 100);
+  });
 
   toggleFavorite(event: Event): void {
     event.preventDefault();

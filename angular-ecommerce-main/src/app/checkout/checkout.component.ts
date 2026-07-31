@@ -1,4 +1,3 @@
-import { CurrencyPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -22,6 +21,7 @@ import {
   buildWhatsappOrderMessage,
   openWhatsappOrder,
 } from '../shared/utils/whatsapp.util';
+import { SolCurrencyPipe } from '../shared/pipes/sol-currency.pipe';
 
 const ATTRIBUTE_LABELS: Record<string, string> = {
   talla: 'Talla',
@@ -32,7 +32,7 @@ const ATTRIBUTE_LABELS: Record<string, string> = {
 
 @Component({
   selector: 'app-checkout',
-  imports: [ReactiveFormsModule, CurrencyPipe],
+  imports: [ReactiveFormsModule, SolCurrencyPipe],
   templateUrl: './checkout.component.html',
 })
 export class CheckoutComponent implements OnInit {

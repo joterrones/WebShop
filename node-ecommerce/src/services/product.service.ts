@@ -30,6 +30,7 @@ export async function listProducts(query: unknown) {
     search,
     isActive,
     includeInactive,
+    showInBanner,
   } = listProductsSchema.parse(query);
 
   const where: Record<string, unknown> = {};
@@ -39,6 +40,7 @@ export async function listProducts(query: unknown) {
     where.isActive = true;
   }
   if (categoryId) where.categoryId = categoryId;
+  if (showInBanner !== undefined) where.showInBanner = showInBanner;
   if (categorySlug) {
     const category = await prisma.category.findUnique({
       where: { slug: categorySlug },
@@ -104,6 +106,9 @@ export async function createProduct(data: unknown) {
       previousPrice: input.previousPrice ?? null,
       stockQuantity: input.stockQuantity,
       isActive: input.isActive,
+      showInBanner: input.showInBanner,
+      reviews: input.reviews,
+      ratingRate: input.ratingRate,
       images: input.images
         ? {
             create: input.images,
@@ -156,6 +161,9 @@ export async function updateProduct(id: string, data: unknown) {
       previousPrice: input.previousPrice,
       stockQuantity: input.stockQuantity,
       isActive: input.isActive,
+      showInBanner: input.showInBanner,
+      reviews: input.reviews,
+      ratingRate: input.ratingRate,
       images: input.images
         ? {
             create: input.images,

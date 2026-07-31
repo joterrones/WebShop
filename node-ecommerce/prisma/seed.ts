@@ -194,6 +194,9 @@ async function main() {
       basePrice: 89.9,
       previousPrice: 99.9,
       stockQuantity: 50,
+      showInBanner: true,
+      reviews: 48,
+      ratingRate: 4.5,
       attrs: [
         { defId: attrTalla.id, optId: tallaM.id },
         { defId: attrTela.id, optId: telaDry.id },
@@ -209,6 +212,9 @@ async function main() {
       basePrice: 79.9,
       previousPrice: 89.9,
       stockQuantity: 40,
+      showInBanner: true,
+      reviews: 32,
+      ratingRate: 4.2,
       attrs: [
         { defId: attrTalla.id, optId: tallaM.id },
         { defId: attrTela.id, optId: telaDry.id },
@@ -349,6 +355,9 @@ async function main() {
         basePrice: p.basePrice,
         previousPrice: p.previousPrice,
         stockQuantity: p.stockQuantity,
+        showInBanner: 'showInBanner' in p ? Boolean(p.showInBanner) : false,
+        reviews: 'reviews' in p ? Number(p.reviews) : 0,
+        ratingRate: 'ratingRate' in p ? Number(p.ratingRate) : 5,
         images: {
           create: [
             {

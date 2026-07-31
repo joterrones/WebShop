@@ -24,6 +24,7 @@ export interface Product {
   inStock: boolean;
   stockQuantity?: number;
   isActive?: boolean;
+  showInBanner?: boolean;
   attributes?: ProductAttributes;
   slug?: string;
 }
@@ -45,6 +46,9 @@ export interface ProductWriteDto {
   previousPrice?: number | null;
   stockQuantity: number;
   isActive: boolean;
+  showInBanner?: boolean;
+  reviews?: number;
+  ratingRate?: number;
   images?: {
     url: string;
     altText?: string;
