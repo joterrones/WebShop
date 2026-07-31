@@ -111,16 +111,37 @@ writeFileSync(join(angularEnvDir, 'environment.prod.ts'), envProd, 'utf8');
 console.log('✓ angular-ecommerce-main/src/environments/environment.ts');
 console.log('✓ angular-ecommerce-main/src/environments/environment.prod.ts');
 
-// --- Angular start port ---
+// --- index.html preconnect al API de medios ---
+const indexPath = join(
+  rootDir,
+  'angular-ecommerce-main',
+  'src',
+  'index.html',
+);
+if (existsSync(indexPath)) {
+  let indexHtml = readFileSync(indexPath, 'utf8');
+  indexHtml = indexHtml.replace(
+    /<link rel="preconnect" href="[^"]*" \/>/,
+    `<link rel="preconnect" href="${mediaBaseUrl}" />`,
+  );
+  writeFileSync(indexPath, indexHtml, 'utf8');
+  console.log('✓ angular-ecommerce-main/src/index.html (preconnect)');
+}
+
+// --- Angular start port (dev) + puerto prod del server.js ---
 const angularPkgPath = join(rootDir, 'angular-ecommerce-main', 'package.json');
 const angularPkg = JSON.parse(readFileSync(angularPkgPath, 'utf8'));
 angularPkg.scripts = angularPkg.scripts || {};
 angularPkg.scripts.start = `ng serve --port ${env.ANGULAR_PORT}`;
+angularPkg.scripts['start:prod'] = 'node server.js';
+angularPkg.scripts.build =
+  angularPkg.scripts.build || 'ng build --configuration production';
 writeFileSync(
   angularPkgPath,
   `${JSON.stringify(angularPkg, null, 2)}\n`,
   'utf8',
 );
 console.log(`✓ angular start → puerto ${env.ANGULAR_PORT}`);
+console.log(`✓ angular start:prod → server.js (PORT=${env.ANGULAR_PORT})`);
 
-console.log('\nListo. Configuración central: Ecomerce2026/.env\n');
+console.log('\nListo. Configuración central: .env en la raíz del monorepo\n');

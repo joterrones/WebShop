@@ -139,25 +139,39 @@ Comprueba que responde: [http://34.237.18.97:3900/api/health](http://34.237.18.9
 
 ### 2. Frontend Angular
 
-Abre **otra terminal**:
+**Desarrollo** (otra terminal):
 
-```powershell
+```bash
 cd angular-ecommerce-main
 npm install
 npm start
 ```
 
-Abre en el navegador: [http://localhost:4900](http://localhost:4900)
+Abre: [http://localhost:4900](http://localhost:4900)
 
-La URL de la API está en `angular-ecommerce-main/src/environments/environment.ts`:
+**Producción / PM2:**
 
-```typescript
-apiUrl: 'http://34.237.18.97:3900/api',
-mediaBaseUrl: 'http://34.237.18.97:3900', // imágenes: /images/products/...
+```bash
+# Desde la raíz del monorepo
+npm run sync-env
+cd angular-ecommerce-main
+npm install
+npm run build          # genera dist/amazon-frontend/browser
+PORT=4900 npm run start:prod   # server.js (Express + SPA)
 ```
 
-Las imágenes del catálogo se resuelven desde el backend (`public/images/products`) como URL absoluta, por ejemplo:
-`http://34.237.18.97:3900/images/products/camiseta-futbol-pro-1.svg`
+Ejemplo PM2: ver `ecosystem.webshop.example.js` en la raíz.
+
+```js
+{
+  name: 'ecomerce_front',
+  cwd: '/proyecto/webshop/WebShop/angular-ecommerce-main',
+  script: 'server.js',
+  env: { PORT: 4900 },
+}
+```
+
+Las URLs del API salen del `.env` raíz (`API_URL`, `MEDIA_BASE_URL`) vía `npm run sync-env`.
 
 ---
 
@@ -266,8 +280,10 @@ angular-ecommerce-main/
 
 | Comando | Descripción |
 |---------|-------------|
-| `npm start` | Servidor de desarrollo en `http://localhost:4900` |
-| `npm run build` | Build de producción en `dist/` |
+| `npm start` | Servidor de desarrollo (`ng serve`) en el puerto del `.env` |
+| `npm run build` | Build de producción en `dist/amazon-frontend/browser` |
+| `npm run start:prod` | Sirve el build con `server.js` (PM2) |
+| `npm run serve:prod` | Build + start:prod |
 | `npm test` | Tests unitarios (Karma) |
 
 ---

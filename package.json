@@ -9,6 +9,7 @@
     "build:api": "npm run sync-env && npm --prefix node-ecommerce run build",
     "build:web": "npm run sync-env && npm --prefix angular-ecommerce-main run build",
     "start:api": "npm run sync-env && npm --prefix node-ecommerce start",
+    "start:web": "npm run sync-env && npm --prefix angular-ecommerce-main run start:prod",
     "db:generate": "npm run sync-env && npm --prefix node-ecommerce run db:generate",
     "db:migrate": "npm run sync-env && npm --prefix node-ecommerce run db:migrate",
     "db:seed": "npm run sync-env && npm --prefix node-ecommerce run db:seed"
