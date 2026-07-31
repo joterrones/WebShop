@@ -34,10 +34,13 @@ if (!distPath) {
   process.exit(1);
 }
 
+const indexFile = path.join(distPath, 'index.html');
+
 app.use(express.static(distPath, { index: false, maxAge: '1h' }));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(distPath, 'index.html'));
+// Express 5: no usar app.get('*'). Fallback SPA con middleware.
+app.use((req, res) => {
+  res.sendFile(indexFile);
 });
 
 app.listen(PORT, HOST, () => {
