@@ -16,7 +16,7 @@ function createApp() {
         credentials: true,
     }));
     app.use(express_1.default.json());
-    // Archivos estáticos: http://localhost:3000/images/...
+    // Archivos estáticos: http://34.237.18.97:3900/images/...
     app.use('/images', express_1.default.static(`${env_1.publicDir}/images`));
     app.use('/api', routes_1.default);
     app.use(error_handler_1.errorHandler);

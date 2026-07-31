@@ -35,11 +35,14 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const ordersController = __importStar(require("../controllers/orders.controller"));
+const auth_1 = require("../middleware/auth");
 const router = (0, express_1.Router)();
+/** Checkout público: crear pedido sin autenticación */
 router.post('/', ordersController.create);
-router.get('/', ordersController.list);
-router.get('/:id', ordersController.getById);
-router.patch('/:id/status', ordersController.updateStatus);
-router.post('/:id/adjustments', ordersController.applyAdjustment);
+/** Administración de pedidos: solo admin */
+router.get('/', ...auth_1.adminOnly, ordersController.list);
+router.get('/:id', ...auth_1.adminOnly, ordersController.getById);
+router.patch('/:id/status', ...auth_1.adminOnly, ordersController.updateStatus);
+router.post('/:id/adjustments', ...auth_1.adminOnly, ordersController.applyAdjustment);
 exports.default = router;
 //# sourceMappingURL=orders.routes.js.map

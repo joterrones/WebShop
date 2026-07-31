@@ -12,13 +12,13 @@ Backend Express + PostgreSQL para tienda de artículos deportivos.
 ```bash
 cd node-ecommerce
 npm install
-cp .env.example .env
+# El .env se genera desde la raíz: en Ecomerce2026/ ejecuta npm run sync-env
 ```
 
 Ejemplo de `.env` con Docker:
 
 ```
-DATABASE_URL=postgresql://postgres:123@localhost:5432/ecommerce
+DATABASE_URL=postgresql://postgres:123@localhost:5432/ecomerce
 PORT=3900
 CORS_ORIGIN=http://localhost:4900
 JWT_SECRET=alaba-sport-dev-secret-change-me
@@ -61,7 +61,7 @@ $env:NODE_TLS_REJECT_UNAUTHORIZED=0
 npx prisma generate
 ```
 
-API disponible en `http://localhost:3900/api`
+API disponible en `http://34.237.18.97:3900/api`
 
 ## Imágenes de productos
 
@@ -69,7 +69,7 @@ Las imágenes se sirven desde la carpeta `public/images/` como archivos estátic
 
 | Carpeta física | URL pública |
 |----------------|-------------|
-| `public/images/products/` | `http://localhost:3900/images/products/<archivo>` |
+| `public/images/products/` | `http://34.237.18.97:3900/images/products/<archivo>` |
 
 En la BD se guarda la **ruta relativa** (ej. `/images/products/camiseta-futbol-pro-1.svg`).  
 La API responde con la URL absoluta usando `PUBLIC_BASE_URL`.

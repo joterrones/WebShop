@@ -3,6 +3,8 @@ export declare const env: {
     PORT: number;
     CORS_ORIGIN: string;
     PUBLIC_BASE_URL: string;
+    JWT_SECRET: string;
+    JWT_EXPIRES_IN: string;
 };
 /** Carpeta física de archivos públicos (imágenes, etc.) */
 export declare const publicDir: string;

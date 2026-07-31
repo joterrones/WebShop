@@ -4,10 +4,41 @@ Monorepo con una tienda online de artículos deportivos. Incluye un **frontend**
 
 ```
 Ecomerce2026/
-├── angular-ecommerce-main/   # Frontend (SportShop)
+├── .env                      # Config central (no se sube a git)
+├── .env.example              # Plantilla
+├── scripts/sync-env.mjs      # Sincroniza Angular + Prisma
+├── angular-ecommerce-main/   # Frontend (ALABA Sport)
 ├── node-ecommerce/           # Backend API REST
-└── README.md                 # Este archivo
+└── README.md
 ```
+
+---
+
+## Configuración central (un solo `.env`)
+
+Toda la conexión a BD, puertos, CORS y URLs del API se editan en la **raíz**:
+
+```bash
+cp .env.example .env
+# edita .env
+npm run sync-env
+```
+
+Eso regenera:
+
+- `node-ecommerce/.env` (para Prisma y el API)
+- `angular-ecommerce-main/src/environments/environment*.ts`
+- el puerto de `ng serve` en el `package.json` del frontend
+
+Scripts útiles desde la raíz:
+
+| Comando | Qué hace |
+|---------|----------|
+| `npm run sync-env` | Aplica el `.env` a ambos proyectos |
+| `npm run dev:api` | Backend en modo watch |
+| `npm run dev:web` | Frontend Angular |
+| `npm run build:api` / `build:web` | Builds de producción |
+| `npm run db:migrate` / `db:seed` | Base de datos |
 
 ---
 
@@ -27,24 +58,16 @@ El frontend consume la API del backend para listar productos, filtrar por catego
 | Parte | ¿BD? | Detalle |
 |--------|------|---------|
 | **`node-ecommerce`** | Sí | PostgreSQL vía Prisma (`DATABASE_URL`) |
-| **`angular-ecommerce-main`** | No | Solo llama a la API (`http://localhost:3900/api`) |
+| **`angular-ecommerce-main`** | No | Solo llama a la API (`http://34.237.18.97:3900/api`) |
 
-Credenciales actuales (en `.env` / `.env.example` del backend):
-
-| Campo | Valor |
-|-------|--------|
-| Servidor | `localhost` |
-| Base de datos | `ecomerce` |
-| Usuario | `postgres` |
-| Contraseña | `123` |
-| URL | `postgresql://postgres:123@localhost:5432/ecommerce` |
+Credenciales y URLs: edita **`Ecomerce2026/.env`** (ver `.env.example`) y ejecuta `npm run sync-env`.
 
 Ahí se guardan categorías, productos, atributos EAV, imágenes y pedidos.
 
 Las **imágenes de productos** se publican como estáticos desde `node-ecommerce/public/images/`:
 
 - Carpeta: `public/images/products/`
-- URL: `http://localhost:3900/images/products/<archivo>`
+- URL: `http://34.237.18.97:3900/images/products/<archivo>`
 
 ---
 
@@ -64,21 +87,16 @@ Opcional para el frontend:
 
 Sigue estos pasos en orden la primera vez. Después solo necesitas levantar backend y frontend.
 
-### 1. Base de datos y backend
+### 1. Configuración y backend
 
-```powershell
+```bash
+# En la raíz Ecomerce2026/
+cp .env.example .env
+# Edita DATABASE_URL, PORT, CORS_ORIGIN, PUBLIC_BASE_URL, API_URL, MEDIA_BASE_URL
+npm run sync-env
+
 cd node-ecommerce
 npm install
-copy .env.example .env
-```
-
-Edita `.env` si tus credenciales de PostgreSQL son distintas:
-
-```env
-DATABASE_URL=postgresql://postgres:123@localhost:5432/ecommerce
-PORT=3900
-CORS_ORIGIN=http://localhost:4900
-PUBLIC_BASE_URL=http://localhost:3900
 ```
 
 **Opción A — PostgreSQL con Docker (recomendado):**
@@ -115,7 +133,7 @@ npx prisma generate
 npm run dev
 ```
 
-Comprueba que responde: [http://localhost:3900/api/health](http://localhost:3900/api/health)
+Comprueba que responde: [http://34.237.18.97:3900/api/health](http://34.237.18.97:3900/api/health)
 
 ---
 
@@ -134,12 +152,12 @@ Abre en el navegador: [http://localhost:4900](http://localhost:4900)
 La URL de la API está en `angular-ecommerce-main/src/environments/environment.ts`:
 
 ```typescript
-apiUrl: 'http://localhost:3900/api',
-mediaBaseUrl: 'http://localhost:3900', // imágenes: /images/products/...
+apiUrl: 'http://34.237.18.97:3900/api',
+mediaBaseUrl: 'http://34.237.18.97:3900', // imágenes: /images/products/...
 ```
 
 Las imágenes del catálogo se resuelven desde el backend (`public/images/products`) como URL absoluta, por ejemplo:
-`http://localhost:3900/images/products/camiseta-futbol-pro-1.svg`
+`http://34.237.18.97:3900/images/products/camiseta-futbol-pro-1.svg`
 
 ---
 

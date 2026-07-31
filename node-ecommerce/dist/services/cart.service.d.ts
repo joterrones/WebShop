@@ -1,9 +1,11 @@
+export declare const AVAILABLE_TALLAS: readonly ["8", "10", "12", "XS", "S", "M", "L", "XL"];
 export declare function getCart(sessionToken: string): Promise<{
     id: string;
     sessionToken: string;
     items: {
         id: string;
         productId: string;
+        talla: string;
         quantity: number;
         product: {
             id: string;
@@ -40,6 +42,7 @@ export declare function addCartItem(sessionToken: string, data: unknown): Promis
     items: {
         id: string;
         productId: string;
+        talla: string;
         quantity: number;
         product: {
             id: string;
@@ -70,12 +73,13 @@ export declare function addCartItem(sessionToken: string, data: unknown): Promis
     count: number;
     total: number;
 }>;
-export declare function updateCartItem(sessionToken: string, productId: string, data: unknown): Promise<{
+export declare function updateCartItem(sessionToken: string, itemId: string, data: unknown): Promise<{
     id: string;
     sessionToken: string;
     items: {
         id: string;
         productId: string;
+        talla: string;
         quantity: number;
         product: {
             id: string;
@@ -106,12 +110,13 @@ export declare function updateCartItem(sessionToken: string, productId: string, 
     count: number;
     total: number;
 }>;
-export declare function removeCartItem(sessionToken: string, productId: string): Promise<{
+export declare function removeCartItem(sessionToken: string, itemId: string): Promise<{
     id: string;
     sessionToken: string;
     items: {
         id: string;
         productId: string;
+        talla: string;
         quantity: number;
         product: {
             id: string;
@@ -148,6 +153,7 @@ export declare function clearCart(sessionToken: string): Promise<{
     items: {
         id: string;
         productId: string;
+        talla: string;
         quantity: number;
         product: {
             id: string;

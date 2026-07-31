@@ -36,13 +36,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const productsController = __importStar(require("../controllers/products.controller"));
 const uploadController = __importStar(require("../controllers/upload.controller"));
+const auth_1 = require("../middleware/auth");
 const upload_1 = require("../middleware/upload");
 const router = (0, express_1.Router)();
 router.get('/', productsController.list);
-router.post('/upload', upload_1.productImageUpload.array('images', 10), uploadController.uploadImages);
 router.get('/:id', productsController.getById);
-router.post('/', productsController.create);
-router.put('/:id', productsController.update);
-router.delete('/:id', productsController.remove);
+router.post('/upload', ...auth_1.adminOnly, upload_1.productImageUpload.array('images', 10), uploadController.uploadImages);
+router.post('/', ...auth_1.adminOnly, productsController.create);
+router.put('/:id', ...auth_1.adminOnly, productsController.update);
+router.delete('/:id', ...auth_1.adminOnly, productsController.remove);
 exports.default = router;
 //# sourceMappingURL=products.routes.js.map

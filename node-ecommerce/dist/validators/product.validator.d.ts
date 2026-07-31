@@ -165,21 +165,25 @@ export declare const listProductsSchema: z.ZodObject<{
     categoryId: z.ZodOptional<z.ZodString>;
     categorySlug: z.ZodOptional<z.ZodString>;
     search: z.ZodOptional<z.ZodString>;
-    /** Si es true, incluye productos inactivos (panel admin) */
+    /** Filtra por activo/inactivo. Si no se envía, ver includeInactive. */
+    isActive: z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodBoolean, z.ZodEnum<["true", "false"]>]>>, boolean | undefined, boolean | "true" | "false" | undefined>;
+    /** Si es true y no hay isActive, incluye activos e inactivos (panel admin) */
     includeInactive: z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodBoolean, z.ZodEnum<["true", "false"]>]>>, boolean, boolean | "true" | "false" | undefined>;
 }, "strip", z.ZodTypeAny, {
     page: number;
     limit: number;
     includeInactive: boolean;
+    search?: string | undefined;
+    isActive?: boolean | undefined;
     categoryId?: string | undefined;
     categorySlug?: string | undefined;
-    search?: string | undefined;
 }, {
+    search?: string | undefined;
+    isActive?: boolean | "true" | "false" | undefined;
     categoryId?: string | undefined;
     page?: number | undefined;
     limit?: number | undefined;
     categorySlug?: string | undefined;
-    search?: string | undefined;
     includeInactive?: boolean | "true" | "false" | undefined;
 }>;
 //# sourceMappingURL=product.validator.d.ts.map

@@ -35,8 +35,9 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const settingsController = __importStar(require("../controllers/settings.controller"));
+const auth_1 = require("../middleware/auth");
 const router = (0, express_1.Router)();
 router.get('/whatsapp', settingsController.getWhatsapp);
-router.put('/whatsapp', settingsController.updateWhatsapp);
+router.put('/whatsapp', ...auth_1.adminOnly, settingsController.updateWhatsapp);
 exports.default = router;
 //# sourceMappingURL=settings.routes.js.map

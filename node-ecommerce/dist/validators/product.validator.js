@@ -33,7 +33,16 @@ exports.listProductsSchema = zod_1.z.object({
     categoryId: zod_1.z.string().uuid().optional(),
     categorySlug: zod_1.z.string().optional(),
     search: zod_1.z.string().optional(),
-    /** Si es true, incluye productos inactivos (panel admin) */
+    /** Filtra por activo/inactivo. Si no se envía, ver includeInactive. */
+    isActive: zod_1.z
+        .union([zod_1.z.boolean(), zod_1.z.enum(['true', 'false'])])
+        .optional()
+        .transform((v) => {
+        if (v === undefined)
+            return undefined;
+        return v === true || v === 'true';
+    }),
+    /** Si es true y no hay isActive, incluye activos e inactivos (panel admin) */
     includeInactive: zod_1.z
         .union([zod_1.z.boolean(), zod_1.z.enum(['true', 'false'])])
         .optional()

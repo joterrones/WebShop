@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AVAILABLE_TALLAS = void 0;
 exports.getCart = getCart;
 exports.addCartItem = addCartItem;
 exports.updateCartItem = updateCartItem;
@@ -10,6 +11,16 @@ const prisma_1 = require("../lib/prisma");
 const error_handler_1 = require("../middleware/error-handler");
 const product_mapper_1 = require("../mappers/product.mapper");
 const decimal_1 = require("../utils/decimal");
+exports.AVAILABLE_TALLAS = [
+    '8',
+    '10',
+    '12',
+    'XS',
+    'S',
+    'M',
+    'L',
+    'XL',
+];
 const productInclude = {
     category: true,
     images: { orderBy: { sortOrder: 'asc' } },
@@ -23,6 +34,7 @@ const productInclude = {
 const addItemSchema = zod_1.z.object({
     productId: zod_1.z.string().uuid(),
     quantity: zod_1.z.number().int().positive().default(1),
+    talla: zod_1.z.enum(exports.AVAILABLE_TALLAS),
 });
 const updateItemSchema = zod_1.z.object({
     quantity: zod_1.z.number().int().min(1),
@@ -38,6 +50,7 @@ function mapCartResponse(cart) {
     const items = cart.items.map((item) => ({
         id: item.id,
         productId: item.productId,
+        talla: item.talla,
         quantity: item.quantity,
         product: (0, product_mapper_1.mapProductToResponse)(item.product),
         lineTotal: (0, decimal_1.toNumber)(item.product.basePrice) * item.quantity,
@@ -95,9 +108,10 @@ async function addCartItem(sessionToken, data) {
     const cart = await getOrCreateCart(sessionToken.trim());
     const existing = await prisma_1.prisma.cartItem.findUnique({
         where: {
-            cartId_productId: {
+            cartId_productId_talla: {
                 cartId: cart.id,
                 productId: input.productId,
+                talla: input.talla,
             },
         },
     });
@@ -112,13 +126,14 @@ async function addCartItem(sessionToken, data) {
             data: {
                 cartId: cart.id,
                 productId: input.productId,
+                talla: input.talla,
                 quantity: input.quantity,
             },
         });
     }
     return loadCart(sessionToken.trim());
 }
-async function updateCartItem(sessionToken, productId, data) {
+async function updateCartItem(sessionToken, itemId, data) {
     if (!sessionToken?.trim()) {
         throw new error_handler_1.AppError(400, 'sessionToken es requerido');
     }
@@ -128,10 +143,8 @@ async function updateCartItem(sessionToken, productId, data) {
     });
     if (!cart)
         throw new error_handler_1.AppError(404, 'Carrito no encontrado');
-    const item = await prisma_1.prisma.cartItem.findUnique({
-        where: {
-            cartId_productId: { cartId: cart.id, productId },
-        },
+    const item = await prisma_1.prisma.cartItem.findFirst({
+        where: { id: itemId, cartId: cart.id },
     });
     if (!item)
         throw new error_handler_1.AppError(404, 'Ítem no está en el carrito');
@@ -141,7 +154,7 @@ async function updateCartItem(sessionToken, productId, data) {
     });
     return loadCart(sessionToken.trim());
 }
-async function removeCartItem(sessionToken, productId) {
+async function removeCartItem(sessionToken, itemId) {
     if (!sessionToken?.trim()) {
         throw new error_handler_1.AppError(400, 'sessionToken es requerido');
     }
@@ -150,9 +163,12 @@ async function removeCartItem(sessionToken, productId) {
     });
     if (!cart)
         throw new error_handler_1.AppError(404, 'Carrito no encontrado');
-    await prisma_1.prisma.cartItem.deleteMany({
-        where: { cartId: cart.id, productId },
+    const deleted = await prisma_1.prisma.cartItem.deleteMany({
+        where: { id: itemId, cartId: cart.id },
     });
+    if (deleted.count === 0) {
+        throw new error_handler_1.AppError(404, 'Ítem no está en el carrito');
+    }
     return loadCart(sessionToken.trim());
 }
 async function clearCart(sessionToken) {

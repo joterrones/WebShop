@@ -24,9 +24,12 @@ const productInclude = {
     },
 };
 async function listProducts(query) {
-    const { page, limit, categoryId, categorySlug, search, includeInactive } = product_validator_1.listProductsSchema.parse(query);
+    const { page, limit, categoryId, categorySlug, search, isActive, includeInactive, } = product_validator_1.listProductsSchema.parse(query);
     const where = {};
-    if (!includeInactive) {
+    if (isActive !== undefined) {
+        where.isActive = isActive;
+    }
+    else if (!includeInactive) {
         where.isActive = true;
     }
     if (categoryId)

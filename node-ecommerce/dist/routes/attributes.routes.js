@@ -35,8 +35,9 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const attributesController = __importStar(require("../controllers/attributes.controller"));
+const auth_1 = require("../middleware/auth");
 const router = (0, express_1.Router)();
 router.get('/', attributesController.list);
-router.post('/', attributesController.create);
+router.post('/', ...auth_1.adminOnly, attributesController.create);
 exports.default = router;
 //# sourceMappingURL=attributes.routes.js.map

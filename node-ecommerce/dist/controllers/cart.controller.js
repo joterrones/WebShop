@@ -70,7 +70,7 @@ async function addItem(req, res, next) {
 }
 async function updateItem(req, res, next) {
     try {
-        const cart = await cartService.updateCartItem(sessionFrom(req), (0, params_1.getParam)(req.params.productId), req.body);
+        const cart = await cartService.updateCartItem(sessionFrom(req), (0, params_1.getParam)(req.params.itemId), req.body);
         res.json(cart);
     }
     catch (err) {
@@ -79,7 +79,7 @@ async function updateItem(req, res, next) {
 }
 async function removeItem(req, res, next) {
     try {
-        const cart = await cartService.removeCartItem(sessionFrom(req), (0, params_1.getParam)(req.params.productId));
+        const cart = await cartService.removeCartItem(sessionFrom(req), (0, params_1.getParam)(req.params.itemId));
         res.json(cart);
     }
     catch (err) {

@@ -129,9 +129,9 @@ export declare const listOrdersSchema: z.ZodObject<{
     toDate?: string | undefined;
 }, {
     status?: "pendiente" | "en_proceso" | "atendido" | undefined;
+    search?: string | undefined;
     page?: number | undefined;
     limit?: number | undefined;
-    search?: string | undefined;
     documentNumber?: string | undefined;
     fromDate?: string | undefined;
     toDate?: string | undefined;

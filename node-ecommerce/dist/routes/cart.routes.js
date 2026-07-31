@@ -38,8 +38,8 @@ const cartController = __importStar(require("../controllers/cart.controller"));
 const router = (0, express_1.Router)();
 router.get('/', cartController.getCart);
 router.post('/items', cartController.addItem);
-router.patch('/items/:productId', cartController.updateItem);
-router.delete('/items/:productId', cartController.removeItem);
+router.patch('/items/:itemId', cartController.updateItem);
+router.delete('/items/:itemId', cartController.removeItem);
 router.delete('/', cartController.clear);
 exports.default = router;
 //# sourceMappingURL=cart.routes.js.map
