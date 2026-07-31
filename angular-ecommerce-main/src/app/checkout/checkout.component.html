@@ -143,9 +143,19 @@
             <dt class="text-gray-600">Subtotal</dt>
             <dd>{{ subtotal | solCurrency }}</dd>
           </div>
-          <div class="flex justify-between">
+          <div class="flex justify-between items-center gap-2">
             <dt class="text-gray-600">Envío</dt>
-            <dd>{{ shippingCost | solCurrency }}</dd>
+            <dd class="flex items-center gap-2">
+              <span class="text-xs text-gray-400">S/.</span>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                [(ngModel)]="shippingCost"
+                name="shippingCost"
+                class="w-24 rounded border border-gray-300 px-2 py-1 text-right text-sm"
+              />
+            </dd>
           </div>
           <div class="flex justify-between border-t border-gray-200 pt-2 font-bold">
             <dt>Total</dt>

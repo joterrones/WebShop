@@ -29,6 +29,15 @@ export interface OrderStatusHistoryEntry {
   changedBy: string | null;
 }
 
+export interface OrderPriceAdjustment {
+  id: string;
+  orderItemId: string | null;
+  adjustmentType: 'discount_percent' | 'discount_fixed' | 'price_override';
+  value: number;
+  reason: string;
+  appliedAt: string;
+}
+
 export interface Order {
   id: string;
   orderNumber: string;
@@ -49,6 +58,7 @@ export interface Order {
   updatedAt: string;
   items: OrderItem[];
   statusHistory: OrderStatusHistoryEntry[];
+  adjustments?: OrderPriceAdjustment[];
 }
 
 export interface OrdersListResponse {
@@ -65,6 +75,15 @@ export interface UpdateOrderStatusDto {
   toStatus: OrderStatus;
   reason?: string;
   changedBy?: string;
+}
+
+export interface SetOrderDiscountDto {
+  amount: number;
+  reason: string;
+}
+
+export interface UpdateOrderShippingDto {
+  shippingCost: number;
 }
 
 export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {

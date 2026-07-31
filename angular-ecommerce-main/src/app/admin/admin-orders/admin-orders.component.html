@@ -234,9 +234,90 @@
               </li>
               }
             </ul>
-            <p class="mt-3 text-right text-sm font-semibold">
-              Total:
-              {{ selectedOrder.total | solCurrency }}
+            <dl class="mt-3 space-y-1 text-sm">
+              <div class="flex justify-between text-gray-600">
+                <dt>Subtotal</dt>
+                <dd>{{ selectedOrder.subtotal | solCurrency }}</dd>
+              </div>
+              <div class="flex justify-between text-gray-600">
+                <dt>Descuento</dt>
+                <dd>-{{ selectedOrder.discountTotal | solCurrency }}</dd>
+              </div>
+              <div class="flex justify-between text-gray-600">
+                <dt>Envío</dt>
+                <dd>{{ selectedOrder.shippingCost | solCurrency }}</dd>
+              </div>
+              <div class="flex justify-between border-t border-gray-100 pt-2 font-semibold text-gray-900">
+                <dt>Total</dt>
+                <dd>{{ selectedOrder.total | solCurrency }}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="border-t border-gray-100 pt-4">
+            <h3 class="mb-3 text-sm font-semibold text-gray-900">
+              Descuento (S/.)
+            </h3>
+            <div class="space-y-3">
+              <div>
+                <label class="mb-1 block text-xs text-gray-500"
+                  >Monto a descontar</label
+                >
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  [(ngModel)]="discountAmount"
+                  name="discountAmount"
+                  class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                  placeholder="0.00"
+                />
+              </div>
+              <div>
+                <label class="mb-1 block text-xs text-gray-500">Motivo</label>
+                <input
+                  type="text"
+                  [(ngModel)]="discountReason"
+                  name="discountReason"
+                  class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                  placeholder="Ej. Cliente frecuente"
+                />
+              </div>
+              <button
+                type="button"
+                (click)="applyDiscount()"
+                [disabled]="savingDiscount"
+                class="w-full rounded-lg bg-black px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#E30613] disabled:opacity-60"
+              >
+                {{ savingDiscount ? 'Aplicando...' : 'Aplicar descuento' }}
+              </button>
+            </div>
+          </div>
+
+          <div class="border-t border-gray-100 pt-4">
+            <h3 class="mb-3 text-sm font-semibold text-gray-900">
+              Costo de envío (S/.)
+            </h3>
+            <div class="flex gap-2">
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                [(ngModel)]="shippingEdit"
+                name="shippingEdit"
+                class="min-w-0 flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              />
+              <button
+                type="button"
+                (click)="saveShipping()"
+                [disabled]="savingShipping"
+                class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
+              >
+                {{ savingShipping ? '...' : 'Guardar' }}
+              </button>
+            </div>
+            <p class="mt-1 text-xs text-gray-500">
+              Por defecto al crear el pedido: S/. 15.00
             </p>
           </div>
 

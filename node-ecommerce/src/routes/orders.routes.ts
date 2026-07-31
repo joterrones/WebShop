@@ -11,6 +11,8 @@ router.post('/', ordersController.create);
 router.get('/', ...adminOnly, ordersController.list);
 router.get('/:id', ...adminOnly, ordersController.getById);
 router.patch('/:id/status', ...adminOnly, ordersController.updateStatus);
+router.patch('/:id/shipping', ...adminOnly, ordersController.updateShipping);
+router.put('/:id/discount', ...adminOnly, ordersController.setDiscount);
 router.post('/:id/adjustments', ...adminOnly, ordersController.applyAdjustment);
 
 export default router;

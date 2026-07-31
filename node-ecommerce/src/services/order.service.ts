@@ -6,7 +6,9 @@ import {
   createAdjustmentSchema,
   createOrderSchema,
   listOrdersSchema,
+  setOrderDiscountSchema,
   updateOrderStatusSchema,
+  updateShippingSchema,
 } from '../validators/order.validator';
 import { validateStatusTransition } from './order-status.service';
 
@@ -294,6 +296,64 @@ export async function applyOrderAdjustment(orderId: string, data: unknown) {
       reason: input.reason,
     },
   });
+
+  return recalculateOrderTotals(orderId);
+}
+
+/** Fija el descuento del pedido en soles (reemplaza descuentos a nivel pedido). */
+export async function setOrderDiscount(orderId: string, data: unknown) {
+  const input = setOrderDiscountSchema.parse(data);
+
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: { items: true },
+  });
+  if (!order) throw new AppError(404, 'Pedido no encontrado');
+
+  await prisma.orderPriceAdjustment.deleteMany({
+    where: { orderId, orderItemId: null },
+  });
+
+  if (input.amount > 0) {
+    await prisma.orderPriceAdjustment.create({
+      data: {
+        orderId,
+        orderItemId: null,
+        adjustmentType: 'discount_fixed',
+        value: input.amount,
+        reason: input.reason,
+      },
+    });
+  }
+
+  return recalculateOrderTotals(orderId);
+}
+
+export async function updateOrderShipping(orderId: string, data: unknown) {
+  const input = updateShippingSchema.parse(data);
+
+  const order = await prisma.order.findUnique({ where: { id: orderId } });
+  if (!order) throw new AppError(404, 'Pedido no encontrado');
+
+  const total = roundMoney(
+    toNumber(order.subtotal) - toNumber(order.discountTotal) + input.shippingCost,
+  );
+
+  const updated = await prisma.order.update({
+    where: { id: orderId },
+    data: { shippingCost: input.shippingCost, total },
+    include: orderInclude,
+  });
+
+  return mapOrder(updated);
+}
+
+async function recalculateOrderTotals(orderId: string) {
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: { items: true },
+  });
+  if (!order) throw new AppError(404, 'Pedido no encontrado');
 
   const itemsSubtotal = order.items.reduce(
     (sum: number, item: { lineTotal: { toString(): string } | number }) =>

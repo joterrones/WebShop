@@ -72,3 +72,35 @@ export async function applyAdjustment(
     next(err);
   }
 }
+
+export async function setDiscount(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const order = await orderService.setOrderDiscount(
+      getParam(req.params.id),
+      req.body,
+    );
+    res.json(order);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function updateShipping(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const order = await orderService.updateOrderShipping(
+      getParam(req.params.id),
+      req.body,
+    );
+    res.json(order);
+  } catch (err) {
+    next(err);
+  }
+}

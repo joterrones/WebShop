@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -32,7 +33,7 @@ const ATTRIBUTE_LABELS: Record<string, string> = {
 
 @Component({
   selector: 'app-checkout',
-  imports: [ReactiveFormsModule, SolCurrencyPipe],
+  imports: [ReactiveFormsModule, FormsModule, SolCurrencyPipe],
   templateUrl: './checkout.component.html',
 })
 export class CheckoutComponent implements OnInit {
@@ -76,7 +77,9 @@ export class CheckoutComponent implements OnInit {
   }
 
   get total(): number {
-    return this.subtotal + this.shippingCost;
+    const shipping = Number(this.shippingCost);
+    const safeShipping = Number.isFinite(shipping) && shipping >= 0 ? shipping : 0;
+    return this.subtotal + safeShipping;
   }
 
   submit(): void {
@@ -85,12 +88,18 @@ export class CheckoutComponent implements OnInit {
       return;
     }
 
+    const shipping = Number(this.shippingCost);
+    if (!Number.isFinite(shipping) || shipping < 0) {
+      this.errorMessage = 'El costo de envío debe ser 0 o mayor.';
+      return;
+    }
+
     this.isSubmitting = true;
     this.errorMessage = '';
 
     const dto: CreateOrderDto = {
       ...this.form.getRawValue(),
-      shippingCost: this.shippingCost,
+      shippingCost: shipping,
       items: this.cartProducts.map((item) => this.mapCartItemToOrderItem(item)),
     };
 

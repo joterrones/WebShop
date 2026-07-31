@@ -10,6 +10,8 @@ import {
   Order,
   OrderStatus,
   OrdersListResponse,
+  SetOrderDiscountDto,
+  UpdateOrderShippingDto,
   UpdateOrderStatusDto,
 } from '../../shared/models/order';
 
@@ -63,5 +65,13 @@ export class OrderService {
 
   updateStatus(id: string, dto: UpdateOrderStatusDto): Observable<Order> {
     return this.http.patch<Order>(`${this.baseUrl}/${id}/status`, dto);
+  }
+
+  setDiscount(id: string, dto: SetOrderDiscountDto): Observable<Order> {
+    return this.http.put<Order>(`${this.baseUrl}/${id}/discount`, dto);
+  }
+
+  updateShipping(id: string, dto: UpdateOrderShippingDto): Observable<Order> {
+    return this.http.patch<Order>(`${this.baseUrl}/${id}/shipping`, dto);
   }
 }

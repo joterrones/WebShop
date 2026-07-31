@@ -47,6 +47,12 @@ export class AdminOrdersComponent implements OnInit {
   nextStatus: OrderStatus | '' = '';
   statusReason = '';
 
+  discountAmount: number | null = null;
+  discountReason = '';
+  shippingEdit: number | null = null;
+  savingDiscount = false;
+  savingShipping = false;
+
   ngOnInit(): void {
     this.loadOrders();
   }
@@ -110,6 +116,9 @@ export class AdminOrdersComponent implements OnInit {
     this.selectedOrder = order;
     this.nextStatus = '';
     this.statusReason = '';
+    this.discountAmount = order.discountTotal;
+    this.discountReason = '';
+    this.shippingEdit = order.shippingCost;
     this.successMessage = '';
     this.errorMessage = '';
   }
@@ -119,6 +128,9 @@ export class AdminOrdersComponent implements OnInit {
     this.selectedOrder = null;
     this.nextStatus = '';
     this.statusReason = '';
+    this.discountAmount = null;
+    this.discountReason = '';
+    this.shippingEdit = null;
   }
 
   generateQuotation(order: Order, event?: Event): void {
@@ -201,6 +213,8 @@ export class AdminOrdersComponent implements OnInit {
           this.selectedOrder = order;
           this.nextStatus = '';
           this.statusReason = '';
+          this.discountAmount = order.discountTotal;
+          this.shippingEdit = order.shippingCost;
           this.successMessage = `Pedido ${order.orderNumber} actualizado a "${this.statusLabels[order.status]}".`;
           this.loadOrders();
         },
@@ -208,6 +222,81 @@ export class AdminOrdersComponent implements OnInit {
           this.updatingId = null;
           this.errorMessage =
             err?.error?.message || 'No se pudo actualizar el estado.';
+        },
+      });
+  }
+
+  applyDiscount(): void {
+    if (!this.selectedOrder) return;
+
+    const amount = Number(this.discountAmount);
+    if (!Number.isFinite(amount) || amount < 0) {
+      this.errorMessage = 'Ingresa un descuento válido en soles (0 o más).';
+      return;
+    }
+    if (amount > 0 && !this.discountReason.trim()) {
+      this.errorMessage = 'Indica el motivo del descuento.';
+      return;
+    }
+
+    this.savingDiscount = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.orderService
+      .setDiscount(this.selectedOrder.id, {
+        amount,
+        reason: this.discountReason.trim() || 'Sin descuento',
+      })
+      .subscribe({
+        next: (order) => {
+          this.savingDiscount = false;
+          this.selectedOrder = order;
+          this.discountAmount = order.discountTotal;
+          this.shippingEdit = order.shippingCost;
+          this.discountReason = '';
+          this.successMessage =
+            amount > 0
+              ? `Descuento de S/. ${amount.toFixed(2)} aplicado a ${order.orderNumber}.`
+              : `Descuento eliminado de ${order.orderNumber}.`;
+          this.loadOrders();
+        },
+        error: (err) => {
+          this.savingDiscount = false;
+          this.errorMessage =
+            err?.error?.message || 'No se pudo aplicar el descuento.';
+        },
+      });
+  }
+
+  saveShipping(): void {
+    if (!this.selectedOrder) return;
+
+    const shippingCost = Number(this.shippingEdit);
+    if (!Number.isFinite(shippingCost) || shippingCost < 0) {
+      this.errorMessage = 'Ingresa un costo de envío válido (0 o más).';
+      return;
+    }
+
+    this.savingShipping = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.orderService
+      .updateShipping(this.selectedOrder.id, { shippingCost })
+      .subscribe({
+        next: (order) => {
+          this.savingShipping = false;
+          this.selectedOrder = order;
+          this.shippingEdit = order.shippingCost;
+          this.discountAmount = order.discountTotal;
+          this.successMessage = `Envío actualizado a S/. ${shippingCost.toFixed(2)} en ${order.orderNumber}.`;
+          this.loadOrders();
+        },
+        error: (err) => {
+          this.savingShipping = false;
+          this.errorMessage =
+            err?.error?.message || 'No se pudo actualizar el envío.';
         },
       });
   }

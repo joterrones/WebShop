@@ -26,7 +26,7 @@ export const createOrderSchema = z.object({
   shippingAddress: z.string().min(1),
   documentType: z.enum(['DNI', 'RUC']),
   documentNumber: z.string().min(1),
-  shippingCost: z.number().min(0).default(0),
+  shippingCost: z.number().min(0).default(15),
   notes: z.string().optional(),
   items: z.array(orderItemSchema).min(1),
 });
@@ -56,4 +56,14 @@ export const createAdjustmentSchema = z.object({
   ]),
   value: z.number().positive(),
   reason: z.string().min(1),
+});
+
+/** Descuento fijo en soles a nivel pedido (reemplaza descuentos previos del pedido) */
+export const setOrderDiscountSchema = z.object({
+  amount: z.number().min(0),
+  reason: z.string().min(1),
+});
+
+export const updateShippingSchema = z.object({
+  shippingCost: z.number().min(0),
 });
